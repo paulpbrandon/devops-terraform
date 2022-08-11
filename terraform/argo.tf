@@ -1,5 +1,5 @@
 data "kubectl_path_documents" "argo" {
-    pattern = "./manifests/argo/*.yaml"
+    pattern = "../manifests/argo/*.yaml"
 }
 
 resource "kubernetes_namespace" "argocd" {

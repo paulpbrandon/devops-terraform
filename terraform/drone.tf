@@ -16,7 +16,7 @@ resource "kubernetes_secret" "drone-secret" {
 }
 
 data "kubectl_path_documents" "drone" {
-    pattern = "./manifests/drone/*.yaml"
+    pattern = "../manifests/drone/*.yaml"
 }
 
 resource "kubernetes_namespace" "drone" {
