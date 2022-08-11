@@ -17,10 +17,11 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "pauls-demo-storage-group"
-    storage_account_name = "paulbnimbletfstore"
-    container_name       = "tfstate"
-    key                  = "codelab.microsoft.tfstate"
+    resource_group_name  = "__tfstategroup__"
+    storage_account_name = "__tfstatestore__"
+    container_name       = "terraform"
+    key                  = "terraform.tfstate"
+    access_key           = "__storagekey__"
   }
 }
 
