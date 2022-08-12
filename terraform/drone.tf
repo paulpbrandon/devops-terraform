@@ -12,11 +12,6 @@ resource "random_password" "drone-rpc-secret" {
   special          = false
 }
 
-resource "random_password" "drone-admin-token" {
-  length           = 32
-  special          = false
-}
-
 resource "kubernetes_secret" "drone-secret" {
   metadata {
     name = "drone-secret"
