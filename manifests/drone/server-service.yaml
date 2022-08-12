@@ -4,10 +4,8 @@ metadata:
   name: droneserver
   labels:
     name: droneserver
-  annotations:
-    service.beta.kubernetes.io/azure-dns-label-name: nimbledronedemo
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - port: 80
     targetPort: 80

@@ -20,6 +20,7 @@ output "cluster_username" {
 
 output "cluster_password" {
     value = azurerm_kubernetes_cluster.aks.kube_config.0.password
+    sensitive = true
 }
 
 output "kube_config" {
@@ -29,4 +30,8 @@ output "kube_config" {
 
 output "host" {
     value = azurerm_kubernetes_cluster.aks.kube_config.0.host
+}
+
+output "public_ip" {
+    value = azurerm_public_ip.ingress-ip.ip_address
 }

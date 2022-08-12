@@ -18,27 +18,33 @@ spec:
         imagePullPolicy: Always
         env:
         - name: "DRONE_TLS_AUTOCERT"
-          value: "true"
+          value: "false"
         - name: "DRONE_USER_CREATE"
-          value: "username:paulpbrandon,admin:true"
+          valueFrom:
+            secretKeyRef:
+              name: drone-secret
+              key: initial_admin_user
         - name: "DRONE_GITHUB_CLIENT_ID"
           valueFrom:
             secretKeyRef:
-              name: drone-secrets
+              name: drone-secret
               key: githubclientid
         - name: "DRONE_GITHUB_CLIENT_SECRET"
           valueFrom:
             secretKeyRef:
-              name: drone-secrets
+              name: drone-secret
               key: githubclientsecret
         - name: "DRONE_SERVER_PROTO"
           value: "https"
         - name: "DRONE_SERVER_HOST"
-          value: "nimblepaultestdrone.uksouth.cloudapp.azure.com"
+          valueFrom:
+            secretKeyRef:
+              name: drone-secret
+              key: host
         - name: "DRONE_RPC_SECRET"
           valueFrom:
             secretKeyRef:
-              name: drone-secrets
+              name: drone-secret
               key: rpcsecret
         volumeMounts:
         - mountPath: /var/lib/drone

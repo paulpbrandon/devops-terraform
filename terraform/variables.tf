@@ -27,3 +27,12 @@ variable github_client_secret {
         type = string
         sensitive = true
 }
+
+variable cluster_domain {
+        type = string
+}
+
+variable "drone_admin_token" {
+         type = string
+         sensitive = true
+}

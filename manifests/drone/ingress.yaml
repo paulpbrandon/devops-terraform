@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: droneserver-ingress
+  namespace: drone
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: drone.paulpbrandon.uk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: droneserver
+                port:
+                  number: 80
+  tls:
+    - hosts:
+      - drone.paulpbrandon.uk
+      secretName: drone-tls-secret
