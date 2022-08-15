@@ -19,8 +19,8 @@ resource "kubernetes_secret" "drone-secret" {
   }
 
   data = {
-    githubclientid     = var.github_client_id
-    githubclientsecret = var.github_client_secret
+    githubclientid     = var.drone_github_client_id
+    githubclientsecret = var.drone_github_client_secret
     rpcsecret          = random_password.drone-rpc-secret.result
     host               = "drone.${var.cluster_domain}"
     initial_admin_user = "username:machine_admin,machine:true,admin:true,token:${var.drone_admin_token}"

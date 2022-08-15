@@ -3,7 +3,7 @@ variable cluster_name {
 }
 
 variable cluster_domain {
-        type = string
+  type = string
 }
 
 variable github_org {
@@ -11,6 +11,15 @@ variable github_org {
 }
 
 variable "drone_admin_token" {
-         type = string
-         sensitive = true
+  type = string
+  sensitive = true
+}
+
+variable "tenant_id" {
+  type = string
+}
+
+variable "argo_token" {
+  type = string
+  sensitive = true
 }

@@ -15,12 +15,17 @@ terraform {
       source = "jimsheldon/drone"
       version = "0.2.0"
     }
+    argocd = {
+      source = "oboukili/argocd"
+      version = "3.2.0"
+    }
   }
   backend "azurerm" {
-    resource_group_name  = "pauls-demo-storage-group"
-    storage_account_name = "paulbnimbletfstore"
-    container_name       = "tfstate"
-    key                  = "drone.setup.tfstate"
+    resource_group_name  = "__tfstategroup__"
+    storage_account_name = "__tfstatestore__"
+    container_name       = "setup"
+    key                  = "terraform.tfstate"
+    access_key           = "__storagekey__"
   }
 }
 
@@ -34,5 +39,10 @@ provider "drone" {
 }
 
 provider "azuread" {
-  tenant_id = "c8f73ab6-9d96-4a57-8b91-d22c63acec71"
+  tenant_id = var.tenant_id
+}
+
+provider "argocd" {
+  server_addr = "https://argo.${var.cluster_domain}/"
+  auth_token  = var.argo_token
 }

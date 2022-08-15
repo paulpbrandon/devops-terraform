@@ -19,11 +19,11 @@ variable network_type {
     } 
 }
 
-variable github_client_id {
+variable drone_github_client_id {
         type = string
 }
 
-variable github_client_secret {
+variable drone_github_client_secret {
         type = string
         sensitive = true
 }
@@ -35,4 +35,21 @@ variable cluster_domain {
 variable "drone_admin_token" {
          type = string
          sensitive = true
+}
+
+variable argo_github_client_id {
+  type = string
+}
+
+variable argo_github_client_secret {
+  type = string
+  sensitive = true
+}
+
+variable argo_github_org {
+  type = string
+}
+
+variable argo_github_admin_group {
+  type = string
 }
