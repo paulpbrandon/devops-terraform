@@ -69,3 +69,14 @@ resource "helm_release" "ingress-controller" {
       value = azurerm_public_ip.ingress-ip.ip_address
     }
 }
+
+resource "kubernetes_config_map_v1_data" "ingress-controller" {
+  depends_on = [helm_release.ingress-controller]
+  metadata {
+    name = "ingress-controller-ingress-nginx-controller"
+    namespace = kubernetes_namespace.ingress.metadata.0.name
+  }
+  data = {
+    proxy-buffer-size = "8k"
+  }
+}

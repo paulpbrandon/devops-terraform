@@ -12,22 +12,6 @@ data "kubectl_path_documents" "sealed-secrets" {
   pattern = "../secrets/*.yaml"
 }
 
-data "azuread_client_config" "current" {}
-
-resource "azuread_application" "drone-acr" {
-  display_name = "drone-acrpush"
-  owners       = [data.azuread_client_config.current.object_id]
-}
-
-resource "azuread_service_principal" "drone-acr" {
-  application_id = azuread_application.drone-acr.application_id
-  owners         = [data.azuread_client_config.current.object_id]
-}
-
-resource "azuread_service_principal_password" "drone-acr" {
-  service_principal_id = azuread_service_principal.drone-acr.id
-}
-
 resource "azurerm_role_assignment" "drone-acrpush" {
   principal_id                     = azuread_service_principal.drone-acr.id
   role_definition_name             = "AcrPush"

@@ -23,3 +23,12 @@ variable "argo_token" {
   type = string
   sensitive = true
 }
+
+variable "default_oauth_group" {
+  type = string
+}
+
+variable "envs" {
+  type = list(string)
+  default = ["dev", "prod"]
+}
