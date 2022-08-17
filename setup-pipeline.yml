@@ -24,7 +24,7 @@ steps:
 - task: replacetokens@5
   displayName: 'Replace tokens in tf files'
   inputs:
-    rootDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+    rootDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
     targetFiles: |
      **/*.tf
      **/*.tfvars
