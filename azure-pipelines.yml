@@ -5,18 +5,45 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: CopyFiles@2
+- task: AzureCLI@2
+  displayName: 'Azure CLI create state store'
   inputs:
-    SourceFolder: 'terraform'
-    Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/terraform'
-- task: CopyFiles@2
+    azureSubscription: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+     az group create --location uksouth --name $(tfstategroup)
+     
+     az storage account create -n $(tfstatestore) -g $(tfstategroup) --location uksouth
+     
+     az storage container create -n terraform --account-name $(tfstatestore)
+     
+     az storage account keys list -g $(tfstategroup) -n $(tfstatestore) | grep value | sed -n 1p | sed 's/.*"value": "\(.*\)"/\1/g' > .key
+     
+     echo "##vso[task.setvariable variable=storagekey;issecret=true]$(cat .key)"
+- task: replacetokens@5
+  displayName: 'Replace tokens in tf files'
   inputs:
-    SourceFolder: 'manifests'
-    Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/manifests'
-- task: PublishBuildArtifacts@1
+    rootDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+    targetFiles: |
+     **/*.tf
+     **/*.tfvars
+    tokenPattern: rm
+    escapeType: none
+- task: TerraformInstaller@0
+  displayName: 'Install Terraform latest'
+- task: TerraformTaskV3@3
+  displayName: 'Terraform init'
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+    backendServiceArm: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+    backendAzureRmResourceGroupName: '$(tfstategroup)'
+    backendAzureRmStorageAccountName: '$(tfstatestore)'
+    backendAzureRmContainerName: terraform
+    backendAzureRmKey: terraform.tfstate
+- task: TerraformTaskV3@3
+  displayName: 'Terraform plan'
+  inputs:
+    command: plan
+    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+    environmentServiceNameAzureRM: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
