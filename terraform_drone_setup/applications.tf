@@ -19,6 +19,7 @@ resource "azurerm_dns_a_record" "helloworld" {
 
 resource "argocd_application" "helloworld" {
   count = length(var.envs)
+  depends_on = [kubectl_manifest.sealed-secrets]
   metadata {
     name      = "helloworld-${var.envs[count.index]}"
     labels    = {
