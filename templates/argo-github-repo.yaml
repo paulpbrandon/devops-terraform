@@ -1,8 +1,7 @@
-#copy to local machine, update as necessary run kubeseal on it and upload and terraform it in
 apiVersion: v1
 kind: Secret
 metadata:
-  name: private-repo
+  name: argo-git-repo
   namespace: argocd
   labels:
     argocd.argoproj.io/secret-type: repository
