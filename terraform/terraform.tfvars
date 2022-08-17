@@ -1,6 +1,6 @@
-drone_github_client_id="__githubclientid__"
+drone_github_client_id="__dronegithubclientid__"
 
-drone_github_client_secret="__githubclientsecret__"
+drone_github_client_secret="__dronegithubclientsecret__"
 
 cluster_domain="paulpbrandon.uk"
 
