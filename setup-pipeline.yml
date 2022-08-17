@@ -16,7 +16,7 @@ steps:
      
      az storage account create -n $(tfstatestore) -g $(tfstategroup) --location uksouth
      
-     az storage container create -n terraform --account-name $(tfstatestore)
+     az storage container create -n setup --account-name $(tfstatestore)
      
      az storage account keys list -g $(tfstategroup) -n $(tfstatestore) | grep value | sed -n 1p | sed 's/.*"value": "\(.*\)"/\1/g' > .key
      
