@@ -46,14 +46,16 @@ Store this value securely, this value will go into the **drone_admin_token** var
 ## Pre-requisites for setup pipeline
 These are the steps you should carry out before running the second setup pipeline for the first time
 
-### Login to Drone and Argo
-Ensure the GitHub integration works and sort out any final authorisation that may need to be carried out
-
 ### Argo restart
 It seems to be advisable to hard restart a couple of services after the first pipeline has been run ***for the very first time*** otherwise you may get strange behaviour with Argo SSO:
 - `kubectl scale deployment argocd-server --replicas=0 -n argocd`
 - `kubectl scale deployment argocd-dex-server --replicas=0 -n argocd`
 - Then bring back however many replicas you need
+
+### Login to Drone and Argo
+Ensure the GitHub integration works and sort out any final authorisation that may need to be carried out.
+
+There may be a possible issue with the update of argocd-cm in this pipeline and may give a 404 on login, if this happens you'll need to fetch the argocd-cm and apply it directly with kubectl, assuming the callback URL is correct in GitHub
 
 ### Argo SSH key
 We are configuring Argo to connect to GitHub repositories via SSH, we are going to encrypt it so that it can be stored in this repo safely
