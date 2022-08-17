@@ -1,11 +1,15 @@
+data "azurerm_resource_group" "rg" {
+  name     = "pauls-demo-group"
+}
+
 data "azurerm_container_registry" "acr" {
   name                = "paulbnimbleregistry"
-  resource_group_name = "pauls-demo-group"
+  resource_group_name = data.azurerm_resource_group.rg.name
 }
 
 data "azurerm_kubernetes_cluster" "aks" {
   name = "pauls-demo-aks-cluster"
-  resource_group_name = "pauls-demo-group"
+  resource_group_name = data.azurerm_resource_group.rg.name
 }
 
 data "kubectl_path_documents" "sealed-secrets" {
