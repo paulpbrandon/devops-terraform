@@ -39,7 +39,7 @@ You will need to do exactly the same as above but for Drone, in order to allow i
 The pipeline will create an initial drone user that we can then use with the argo provider. 
 
 The token for this user can be generated up front with:
-`openssl rand -hex 32`
+`openssl rand -hex 16`
 
 Store this value securely, this value will go into the **drone_admin_token** variable in tfvars
 
