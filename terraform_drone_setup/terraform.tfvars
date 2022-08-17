@@ -5,6 +5,8 @@ cluster_domain="paulpbrandon.uk"
 
 github_org="nimbleapproach"
 
-tenant_id = "__tenantid__"
+tenant_id = "c8f73ab6-9d96-4a57-8b91-d22c63acec71"
 
 argo_token = "__argotoken__"
+
+default_oauth_group = "f6bc2d3e-3b7f-4aec-98b4-117a677fa5b6"
