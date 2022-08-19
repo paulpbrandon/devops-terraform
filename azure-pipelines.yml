@@ -76,6 +76,18 @@ jobs:
        **/*.tfvars
       tokenPattern: rm
       escapeType: none
+  - task: TerraformInstaller@0
+    displayName: 'Install Terraform latest'
+  - task: TerraformTaskV3@3
+    displayName: 'Terraform init'
+    inputs:
+      provider: 'azurerm'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      backendServiceArm: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+      backendAzureRmResourceGroupName: '$(tfstategroup)'
+      backendAzureRmStorageAccountName: '$(tfstatestore)'
+      backendAzureRmContainerName: terraform
+      backendAzureRmKey: terraform.tfstate
   - task: TerraformTaskV3@3
     inputs:
       provider: 'azurerm'
