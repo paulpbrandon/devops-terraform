@@ -24,6 +24,7 @@ resource "kubectl_manifest" "argo" {
 #may need a better way, generally seem to need hard restarts after changing these settings (Helm?)
 #need the client secret in a secret too
 resource "kubernetes_config_map_v1_data" "sso" {
+  depends_on = [kubectl_manifest.argo]
   metadata {
     name = "argocd-cm"
     namespace = "argocd"
@@ -48,6 +49,7 @@ EOF
 }
 
 resource "kubernetes_config_map_v1_data" "sso-policy" {
+  depends_on = [kubectl_manifest.argo]
   metadata {
     name = "argocd-rbac-cm"
     namespace = "argocd"

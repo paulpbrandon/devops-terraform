@@ -99,6 +99,7 @@ jobs:
       backendAzureRmContainerName: terraform
       backendAzureRmKey: terraform.tfstate
   - task: TerraformTaskV3@3
+    displayName: 'Terraform apply'
     inputs:
       provider: 'azurerm'
       command: 'apply'
