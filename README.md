@@ -10,6 +10,14 @@ This split exists as the Argo and Drone providers cannot work without those apps
 ## Pre-requisites
 Certain steps can't be terraformed and need to be carried out prior to running this pipeline
 
+### Azure DevOps Service Connection
+If deploying from Azure DevOps, as it currently stands, when you create the service connection from Azure DevOps, you will also need to assign it another role so that it can assign roles itself e.g. For ACR Pull.
+
+There may be better ways, but the quick way is to do this:
+`az role assignment create --assignee "{objectid}" --role "User Access Administrator" --subscription "{subscriptionid}"`
+
+Could create a role with *"Microsoft.Authorization/roleAssignments/write"* and *"Microsoft.Authorization/roleAssignments/delete"* and assign that instead
+
 ### Argo GitHub integration
 You will need to create an OAuth application within GitHub with access to the relevant Organisations.
 

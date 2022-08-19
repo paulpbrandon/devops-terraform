@@ -1,0 +1,45 @@
+trigger:
+- none
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: AzureCLI@2
+    displayName: 'Azure CLI get state store key'
+    inputs:
+      azureSubscription: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+       az storage account keys list -g $(tfstategroup) -n $(tfstatestore) | grep value | sed -n 1p | sed 's/.*"value": "\(.*\)"/\1/g' > .key
+     
+       echo "##vso[task.setvariable variable=storagekey;issecret=true]$(cat .key)"
+  - task: replacetokens@5
+    displayName: 'Reapply tokens in tf files'
+    inputs:
+      rootDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      targetFiles: |
+       **/providers.tf
+       **/*.tfvars
+      tokenPattern: rm
+      escapeType: none
+  - task: TerraformInstaller@0
+    displayName: 'Install Terraform latest'
+  - task: TerraformTaskV3@3
+    displayName: 'Terraform init'
+    inputs:
+      provider: 'azurerm'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      backendServiceArm: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+      backendAzureRmResourceGroupName: '$(tfstategroup)'
+      backendAzureRmStorageAccountName: '$(tfstatestore)'
+      backendAzureRmContainerName: terraform
+      backendAzureRmKey: terraform.tfstate
+  - task: TerraformTaskV3@3
+    displayName: 'Terraform destroy'
+    inputs:
+      provider: 'azurerm'
+      command: 'destroy'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      environmentServiceNameAzureRM: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
