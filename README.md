@@ -46,6 +46,12 @@ Store this value securely, this value will go into the **drone_admin_token** var
 ## Pre-requisites for setup pipeline
 These are the steps you should carry out before running the second setup pipeline for the first time
 
+### DNS
+With creating DNS Zone (or similar) as a resource, then it is likely you may need to update the name servers associated with the domain (as defined in DNS Zone).
+The Argo and Drone providers will not work if the alias entries cannot be resolved. So there will be a dependency on DNS propagation.
+
+It may be advisable to create the zone separately, and bring in as a data resource as destroying and recreating is liable to change the Azure name servers it is attached to
+
 ### Argo restart
 It seems to be advisable to hard restart a couple of services after the first pipeline has been run ***for the very first time*** otherwise you may get strange behaviour with Argo SSO:
 - `kubectl scale deployment argocd-server --replicas=0 -n argocd`
