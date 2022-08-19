@@ -1,3 +1,4 @@
+
 trigger:
 - none
 
@@ -35,6 +36,7 @@ steps:
 - task: TerraformTaskV3@3
   displayName: 'Terraform init'
   inputs:
+    provider: 'azurerm'
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
     backendServiceArm: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
     backendAzureRmResourceGroupName: '$(tfstategroup)'
@@ -44,6 +46,17 @@ steps:
 - task: TerraformTaskV3@3
   displayName: 'Terraform plan'
   inputs:
+    provider: 'azurerm'
     command: plan
+    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
+    environmentServiceNameAzureRM: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+- task: ManualIntervention@8
+  timeoutInMinutes: 1440
+  inputs:
+    instructions: 'This pause exists as sometimes you just want to check something plans, and then apply at a later more convenient time'
+- task: TerraformTaskV3@3
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
     environmentServiceNameAzureRM: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
