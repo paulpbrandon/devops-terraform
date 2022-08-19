@@ -78,6 +78,13 @@ This pipeline will create a machine user, but it will not have a token. To get a
 - An expiry can be set, but it does mean the pipeline will periodically stop working until you set a new one
 - Take note of the token and store securely, this corresponds to **argo_token** variable in tfvars
 
+### Drone metrics user
+We can only seemingly create one account up front for drone, we could use the admin account to access metrics, but it may not be a good idea.
+
+So we'll create a new one, the plan was for the drone provider to create the user and inject the token automatically, however, the user create does not appear to return a token value, therefore create one with the drone CLI e.g.
+- `drone user add metrics_user --machine --token=8535d5b6d00da0f9eaa03ffdd72afex9`
+And add this to the variable *drone_metrics_token*
+
 ## Adding applications to Argo
 Argo will get the manifest for an application from a git repo. See the [applications.tf](./terraform_drone_setup/applications.tf) file for an example of how to add them from this pipeline.
 

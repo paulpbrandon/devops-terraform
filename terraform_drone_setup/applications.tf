@@ -19,7 +19,6 @@ resource "azurerm_dns_a_record" "helloworld" {
 
 resource "argocd_application" "helloworld" {
   count = length(var.envs)
-  depends_on = [kubectl_manifest.sealed-secrets]
   metadata {
     name      = "helloworld-${var.envs[count.index]}"
     labels    = {
@@ -49,7 +48,16 @@ resource "argocd_application" "helloworld" {
         self_heal   = true
         allow_empty = true
       }
-      sync_options = ["CreateNamespace=true"]
+      sync_options = ["CreateNamespace=true", "RespectIgnoreDifferences=true"]
+    }
+
+    #allow app to be scaled without healing back to original state
+    #can also just not define replicas in the application deployment, but this should give the flexibility to just
+    #add and remove scaled objects as necessary
+    ignore_difference {
+      group         = "apps"
+      kind          = "Deployment"
+      json_pointers = ["/spec/replicas"]
     }
   }
 }

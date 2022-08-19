@@ -31,6 +31,7 @@ resource "kubernetes_config_map_v1_data" "sso" {
   data = {
     "accounts.machine" = "apiKey"
     "admin.enabled" = "false"
+    "statusbadge.enabled" = "true"
     "url" = "https://argo.${var.cluster_domain}"
     "dex.config" = <<-EOF
 connectors:

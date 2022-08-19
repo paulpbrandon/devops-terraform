@@ -68,6 +68,32 @@ resource "helm_release" "ingress-controller" {
       name  = "controller.service.loadBalancerIP"
       value = azurerm_public_ip.ingress-ip.ip_address
     }
+
+  set {
+    name  = "controller.metrics.enabled"
+    value = true
+  }
+
+  set {
+    name  = "controller.podAnnotations.\"prometheus\\.io/path\""
+    value = "/metrics"
+  }
+
+  set {
+    name  = "controller.podAnnotations.\"prometheus\\.io/scrape\""
+    value = "true"
+    type = "string"
+  }
+
+  set {
+    name  = "controller.podAnnotations.\"prometheus\\.io/port\""
+    value = "10254"
+    type = "string"
+  }
+  #when metrics enabled nginx creates a separate service for metrics
+  #however the pod annotations above will apply to the metrics pod AND the controller pod
+  #the controller pod will not report metrics, so you see an unknown in prometheus
+  #alternative is not to do pod annotation based scraping for this and and explicitly configure the scrape target
 }
 
 resource "kubernetes_config_map_v1_data" "ingress-controller" {

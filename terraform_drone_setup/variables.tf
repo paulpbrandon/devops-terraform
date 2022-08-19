@@ -24,6 +24,10 @@ variable "argo_token" {
   sensitive = true
 }
 
+variable "drone_metrics_token" {
+  type = string
+}
+
 variable "default_oauth_group" {
   type = string
 }
