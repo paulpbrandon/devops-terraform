@@ -67,6 +67,15 @@ jobs:
   displayName: 'Apply changes to infrastructure'
   dependsOn: manual_wait
   steps:
+  - task: replacetokens@5
+    displayName: 'Reapply tokens in tf files'
+    inputs:
+      rootDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      targetFiles: |
+       **/providers.tf
+       **/*.tfvars
+      tokenPattern: rm
+      escapeType: none
   - task: TerraformTaskV3@3
     inputs:
       provider: 'azurerm'
