@@ -4,58 +4,72 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: AzureCLI@2
-  displayName: 'Azure CLI create state store'
-  inputs:
-    azureSubscription: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-     az group create --location uksouth --name $(tfstategroup)
+jobs:
+- job: init
+  displayName: 'Initialise Terraform'
+  steps:
+  - task: AzureCLI@2
+    displayName: 'Azure CLI create state store'
+    inputs:
+      azureSubscription: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+       az group create --location uksouth --name $(tfstategroup)
      
-     az storage account create -n $(tfstatestore) -g $(tfstategroup) --location uksouth
+       az storage account create -n $(tfstatestore) -g $(tfstategroup) --location uksouth
      
-     az storage container create -n terraform --account-name $(tfstatestore)
+       az storage container create -n terraform --account-name $(tfstatestore)
      
-     az storage account keys list -g $(tfstategroup) -n $(tfstatestore) | grep value | sed -n 1p | sed 's/.*"value": "\(.*\)"/\1/g' > .key
+       az storage account keys list -g $(tfstategroup) -n $(tfstatestore) | grep value | sed -n 1p | sed 's/.*"value": "\(.*\)"/\1/g' > .key
      
-     echo "##vso[task.setvariable variable=storagekey;issecret=true]$(cat .key)"
-- task: replacetokens@5
-  displayName: 'Replace tokens in tf files'
-  inputs:
-    rootDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-    targetFiles: |
-     **/providers.tf
-     **/*.tfvars
-    tokenPattern: rm
-    escapeType: none
-- task: TerraformInstaller@0
-  displayName: 'Install Terraform latest'
-- task: TerraformTaskV3@3
-  displayName: 'Terraform init'
-  inputs:
-    provider: 'azurerm'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-    backendServiceArm: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
-    backendAzureRmResourceGroupName: '$(tfstategroup)'
-    backendAzureRmStorageAccountName: '$(tfstatestore)'
-    backendAzureRmContainerName: terraform
-    backendAzureRmKey: terraform.tfstate
-- task: TerraformTaskV3@3
-  displayName: 'Terraform plan'
-  inputs:
-    provider: 'azurerm'
-    command: plan
-    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-    environmentServiceNameAzureRM: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
-- task: ManualIntervention@8
-  timeoutInMinutes: 1440
-  inputs:
-    instructions: 'This pause exists as sometimes you just want to check something plans, and then apply at a later more convenient time'
-- task: TerraformTaskV3@3
-  inputs:
-    provider: 'azurerm'
-    command: 'apply'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-    environmentServiceNameAzureRM: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+       echo "##vso[task.setvariable variable=storagekey;issecret=true]$(cat .key)"
+  - task: replacetokens@5
+    displayName: 'Replace tokens in tf files'
+    inputs:
+      rootDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      targetFiles: |
+       **/providers.tf
+       **/*.tfvars
+      tokenPattern: rm
+      escapeType: none
+  - task: TerraformInstaller@0
+    displayName: 'Install Terraform latest'
+  - task: TerraformTaskV3@3
+    displayName: 'Terraform init'
+    inputs:
+      provider: 'azurerm'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      backendServiceArm: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+      backendAzureRmResourceGroupName: '$(tfstategroup)'
+      backendAzureRmStorageAccountName: '$(tfstatestore)'
+      backendAzureRmContainerName: terraform
+      backendAzureRmKey: terraform.tfstate
+  - task: TerraformTaskV3@3
+    displayName: 'Terraform plan'
+    inputs:
+      provider: 'azurerm'
+      command: plan
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      environmentServiceNameAzureRM: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+
+- job: manual_wait
+  displayName: 'Wait for permission to apply'
+  pool: server
+  dependsOn: init
+  steps:
+  - task: ManualIntervention@8
+    timeoutInMinutes: 1440
+    inputs:
+      instructions: 'This pause exists as sometimes you just want to check something plans, and then apply at a later more convenient time'
+
+- job: apply
+  displayName: 'Wait for permission to apply'
+  dependsOn: manual_wait
+  steps:
+  - task: TerraformTaskV3@3
+    inputs:
+      provider: 'azurerm'
+      command: 'apply'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      environmentServiceNameAzureRM: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
