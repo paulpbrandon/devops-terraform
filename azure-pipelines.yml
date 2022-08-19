@@ -58,13 +58,13 @@ jobs:
   pool: server
   dependsOn: init
   steps:
-  - task: ManualIntervention@8
+  - task: ManualValidation@0
     timeoutInMinutes: 1440
     inputs:
       instructions: 'This pause exists as sometimes you just want to check something plans, and then apply at a later more convenient time'
 
 - job: apply
-  displayName: 'Wait for permission to apply'
+  displayName: 'Apply changes to infrastructure'
   dependsOn: manual_wait
   steps:
   - task: TerraformTaskV3@3
