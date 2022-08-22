@@ -1,3 +1,4 @@
+#individual application setups may want to be declared as their own pipeline
 data "azurerm_public_ip" "ingress-ip" {
   name                = "ingressIP"
   resource_group_name = data.azurerm_kubernetes_cluster.aks.node_resource_group
@@ -60,4 +61,11 @@ resource "argocd_application" "helloworld" {
       json_pointers = ["/spec/replicas"]
     }
   }
+}
+
+#activate application repository in drone (will add webhooks to GitHub)
+resource "drone_repo" "helloworld" {
+  repository = "nimbleapproach/drone-demo-app"
+  visibility = "private"
+  configuration = ".drone.yml"
 }

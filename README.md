@@ -102,4 +102,6 @@ And add this to the variable *drone_metrics_token*
 ## Adding applications to Argo
 Argo will get the manifest for an application from a git repo. See the [applications.tf](./terraform_drone_setup/applications.tf) file for an example of how to add them from this pipeline.
 
-This demo will currently deploy 2 versions of a helloworld app as defined in https://github.com/nimbleapproach/argo-demo/tree/main/kustomizehelloworld 
+This demo will currently deploy 2 versions of a helloworld app as defined in https://github.com/nimbleapproach/argo-demo/tree/main/kustomizehelloworld.
+
+Note, if we wish to use a webhook to trigger Argo when the argo repo is changed we'll need to add that to GitHub manually. By default, Argo checks the repo every 3 minutes
