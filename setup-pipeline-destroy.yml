@@ -21,6 +21,7 @@ steps:
       rootDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
       targetFiles: |
        **/providers.tf
+       **/*.tfvars
       tokenPattern: rm
       escapeType: none
   - task: TerraformInstaller@0
