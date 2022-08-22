@@ -104,4 +104,4 @@ jobs:
           provider: 'azurerm'
           command: 'apply'
           workingDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
-          environmentServiceNameAzureRM: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+          environmentServiceNameAzureRM: 'mitest'
