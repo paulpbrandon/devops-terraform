@@ -19,6 +19,7 @@ resource "azurerm_dns_a_record" "helloworld" {
 }
 
 resource "argocd_application" "helloworld" {
+  depends_on = [kubectl_manifest.sealed-secrets] #sets up repo link
   count = length(var.envs)
   metadata {
     name      = "helloworld-${var.envs[count.index]}"
@@ -64,8 +65,9 @@ resource "argocd_application" "helloworld" {
 }
 
 #activate application repository in drone (will add webhooks to GitHub)
-resource "drone_repo" "helloworld" {
-  repository = "nimbleapproach/drone-demo-app"
-  visibility = "private"
-  configuration = ".drone.yml"
-}
+#this currently fails and using drone repo enable on command line also fails, I think the admin user has to be an actual github user to do this
+#resource "drone_repo" "helloworld" {
+#  repository = "nimbleapproach/drone-demo-app"
+#  visibility = "private"
+#  configuration = ".drone.yml"
+#}
