@@ -49,10 +49,31 @@ The pipeline will create an initial drone user that we can then use with the arg
 The token for this user can be generated up front with:
 `openssl rand -hex 16`
 
-Store this value securely, this value will go into the **drone_admin_token** variable in tfvars
+Store this value securely, this value will go into the **drone_admin_token** variable in tfvars.
+
+**Additional Note:** There are some steps in the drone provider that require the user to be an actual GitHub user e.g. drone_repo resources.
+We can do this by specifying the username as one matching a suitable account instead of machine_admin or upgrade an account afterwards with:
+
+`drone user update paulpbrandon --admin`
+
+You may then use this user's token in the following pipeline if you want automatic repo activation, otherwise you'll need to activate in the drone UI
 
 ## Pre-requisites for setup pipeline
 These are the steps you should carry out before running the second setup pipeline for the first time
+
+
+### Azure DevOps Service Connection
+If using Azure DevOps, the service user will need permission to create an Azure AD application.
+- This is currently critical for drone to write an image to ACR
+- It is also needed if the OAuth proxy is in use
+
+The necessary role can be set via the Graph API or in Portal (that is, if you have permissions yourself to add AD roles to a Service Principal!).
+These are not the same set of roles that be set via *az role assignment* as above
+
+The command below would add the *Application Developer* built in role (**not yet tested if this is enough as I currently have the above permission problem!**)
+```shell
+az rest --method POST --uri 'https://graph.microsoft.com/beta/roleManagement/directory/roleAssignments' --body '{"principalId": "3632d5cd-664d-4fc9-a1e0-830b16e97d0e", "roleDefinitionId": "cf1c38e5-3621-4004-a7cb-879624dced7c", "directoryScopeId": "/"}'
+```
 
 ### DNS
 With creating DNS Zone (or similar) as a resource, then it is likely you may need to update the name servers associated with the domain (as defined in DNS Zone).
@@ -104,4 +125,6 @@ Argo will get the manifest for an application from a git repo. See the [applicat
 
 This demo will currently deploy 2 versions of a helloworld app as defined in https://github.com/nimbleapproach/argo-demo/tree/main/kustomizehelloworld.
 
-Note, if we wish to use a webhook to trigger Argo when the argo repo is changed we'll need to add that to GitHub manually. By default, Argo checks the repo every 3 minutes
+Note, if we wish to use a webhook to trigger Argo when the argo repo is changed we'll need to add that to GitHub manually. By default, Argo checks the repo every 3 minutes.
+
+If you have pre-existing apps when adding to Argo, their image will need to be copied to the appropriate ACR, or simply trigger a new build in Drone, to do it

@@ -16,9 +16,9 @@ steps:
      
        echo "##vso[task.setvariable variable=storagekey;issecret=true]$(cat .key)"
   - task: replacetokens@5
-    displayName: 'Reapply tokens in tf files'
+    displayName: 'Replace tokens in tf files'
     inputs:
-      rootDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      rootDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
       targetFiles: |
        **/providers.tf
       tokenPattern: rm
@@ -31,16 +31,16 @@ steps:
     displayName: 'Terraform init'
     inputs:
       provider: 'azurerm'
-      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
       backendServiceArm: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
       backendAzureRmResourceGroupName: '$(tfstategroup)'
       backendAzureRmStorageAccountName: '$(tfstatestore)'
-      backendAzureRmContainerName: terraform
+      backendAzureRmContainerName: setup
       backendAzureRmKey: terraform.tfstate
   - task: TerraformTaskV3@3
     displayName: 'Terraform destroy'
     inputs:
       provider: 'azurerm'
       command: 'destroy'
-      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
       environmentServiceNameAzureRM: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'

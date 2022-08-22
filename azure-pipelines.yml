@@ -34,7 +34,9 @@ jobs:
       tokenPattern: rm
       escapeType: none
   - task: TerraformInstaller@0
-    displayName: 'Install Terraform latest'
+    displayName: 'Install Terraform 1.2.7'
+    inputs:
+      terraformVersion: '1.2.7'
   - task: TerraformTaskV3@3
     displayName: 'Terraform init'
     inputs:
@@ -87,7 +89,9 @@ jobs:
       tokenPattern: rm
       escapeType: none
   - task: TerraformInstaller@0
-    displayName: 'Install Terraform latest'
+    displayName: 'Install Terraform 1.2.7'
+    inputs:
+      terraformVersion: '1.2.7'
   - task: TerraformTaskV3@3
     displayName: 'Terraform init'
     inputs:
