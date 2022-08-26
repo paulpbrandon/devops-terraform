@@ -63,16 +63,16 @@ These are the steps you should carry out before running the second setup pipelin
 
 
 ### Azure DevOps Service Connection
-If using Azure DevOps, the service user will need permission to create an Azure AD application.
+If using Azure DevOps, the service user will need permission to administer an Azure AD application.
 - This is currently critical for drone to write an image to ACR
 - It is also needed if the OAuth proxy is in use
 
 The necessary role can be set via the Graph API or in Portal (that is, if you have permissions yourself to add AD roles to a Service Principal!).
 These are not the same set of roles that be set via *az role assignment* as above
 
-The command below would add the *Application Developer* built in role (**not yet tested if this is enough as I currently have the above permission problem!**)
+The command below would add the *Application Administrator* built in role (**not yet tested if this is enough as I currently have the above permission problem!**)
 ```shell
-az rest --method POST --uri 'https://graph.microsoft.com/beta/roleManagement/directory/roleAssignments' --body '{"principalId": "3632d5cd-664d-4fc9-a1e0-830b16e97d0e", "roleDefinitionId": "cf1c38e5-3621-4004-a7cb-879624dced7c", "directoryScopeId": "/"}'
+az rest --method POST --uri 'https://graph.microsoft.com/beta/roleManagement/directory/roleAssignments' --body '{"principalId": "3632d5cd-664d-4fc9-a1e0-830b16e97d0e", "roleDefinitionId": "9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3", "directoryScopeId": "/"}'
 ```
 
 ### DNS
