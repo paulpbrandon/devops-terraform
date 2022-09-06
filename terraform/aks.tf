@@ -8,7 +8,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     name       = "default"
     node_count = var.node_count
     vm_size    = "Standard_D2_v2"
-    vnet_subnet_id = azurerm_virtual_network.aks.subnet.id
+    vnet_subnet_id = azurerm_virtual_network.aks.id
   }
 
   identity {
