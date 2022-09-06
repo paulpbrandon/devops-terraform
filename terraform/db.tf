@@ -1,6 +1,6 @@
 resource "azurerm_cosmosdb_account" "cosmosdb" {
   name                = "aks-test"
-  location            = azurerm_resource_group.rg.location
+  location            = "ukwest"
   resource_group_name = azurerm_resource_group.rg.name
   offer_type          = "Standard"
   kind                = "MongoDB"
