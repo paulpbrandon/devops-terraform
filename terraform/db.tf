@@ -13,6 +13,10 @@ resource "azurerm_cosmosdb_account" "cosmosdb" {
     name = "EnableMongo"
   }
 
+  capabilities {
+    name = "EnableServerless"
+  }
+
   consistency_policy {
     consistency_level       = "BoundedStaleness"
     max_interval_in_seconds = 300
