@@ -11,7 +11,7 @@ jobs:
       - task: AzureCLI@2
         displayName: 'Azure CLI create state store'
         inputs:
-          azureSubscription: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+          azureSubscription: 'Azure'
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
@@ -42,7 +42,7 @@ jobs:
         inputs:
           provider: 'azurerm'
           workingDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
-          backendServiceArm: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+          backendServiceArm: 'Azure'
           backendAzureRmResourceGroupName: '$(tfstategroup)'
           backendAzureRmStorageAccountName: '$(tfstatestore)'
           backendAzureRmContainerName: setup
@@ -53,7 +53,7 @@ jobs:
           provider: 'azurerm'
           command: plan
           workingDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
-          environmentServiceNameAzureRM: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+          environmentServiceNameAzureRM: 'Azure'
 
   - job: manual_wait
     displayName: 'Wait for permission to apply'
@@ -72,7 +72,7 @@ jobs:
       - task: AzureCLI@2
         displayName: 'Azure CLI get state store key'
         inputs:
-          azureSubscription: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+          azureSubscription: 'Azure'
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
@@ -97,7 +97,7 @@ jobs:
         inputs:
           provider: 'azurerm'
           workingDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
-          backendServiceArm: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+          backendServiceArm: 'Azure'
           backendAzureRmResourceGroupName: '$(tfstategroup)'
           backendAzureRmStorageAccountName: '$(tfstatestore)'
           backendAzureRmContainerName: setup
@@ -108,4 +108,4 @@ jobs:
           provider: 'azurerm'
           command: 'apply'
           workingDirectory: '$(System.DefaultWorkingDirectory)/terraform_drone_setup'
-          environmentServiceNameAzureRM: 'Paul Brandon(246a48d2-1133-4314-b077-2d4a4cbe05ba)'
+          environmentServiceNameAzureRM: 'Azure'
