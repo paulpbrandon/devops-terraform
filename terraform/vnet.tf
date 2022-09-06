@@ -7,7 +7,7 @@ resource "azurerm_virtual_network" "aks" {
 resource "azurerm_subnet" "aks" {
   name                 = "aks-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_resource_group.rg.location
+  virtual_network_name = azurerm_virtual_network.aks.name
   address_prefixes     = ["10.0.1.0/24"]
 
   service_endpoints = ["Microsoft.AzureCosmosDB"]
