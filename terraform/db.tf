@@ -30,7 +30,7 @@ resource "azurerm_cosmosdb_account" "cosmosdb" {
 
   #this should hopefully demonstrate access at the service level, may be able to use private endpoints for more granular control
   virtual_network_rule {
-    id = azurerm_virtual_network.aks.id
+    id = azurerm_subnet.aks.id
   }
 
 }
